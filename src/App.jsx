@@ -1,12 +1,15 @@
-import { useState } from 'react'
-import './App.css'
+import "./App.css";
 import "./Global.css";
+import { Main } from "./components/Header";
+import { ToAdd } from "./components/Task";
 
-function App() {
-
+export function App() {
   return (
-    <h1>Ola</h1>
-  )
+    <div className="min-w-full min-h-screen	">
+      <Main />
+      <ToAdd />
+    </div>
+  );
 }
 
-export default App
+
