@@ -2,7 +2,8 @@ import "./App.css";
 import "./Global.css";
 import { PageContent } from "./components/Content";
 import { Main } from "./components/Header";
-import { ToAdd } from "./components/Task";
+import { ToAdd } from "./components/NewTask";
+import { CreatedTask } from "./components/Task";
 
 export function App() {
   return (
@@ -10,6 +11,7 @@ export function App() {
       <Main />
       <ToAdd />
       <PageContent />
+      <CreatedTask />
     </div>
   );
 }

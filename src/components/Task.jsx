@@ -1,16 +1,11 @@
-import { PlusCircle } from "@phosphor-icons/react";
-export function ToAdd() {
+import { CheckCircle } from '@phosphor-icons/react'
+
+export function CreatedTask() {
   return (
-    <div className="flex justify-center w-[46rem] mx-auto gap-2 relative -top-7">
-      <input
-        className="bg-neutral-800 p-4 w-[40rem] rounded-lg text-white border border-black outline-none focus:border-purple-900 focus:border border-box"
-        type="text"
-        placeholder="Adicione uma nova tarefa"
-      />
-      <div className="flex justify-center items-center gap-2 p-4 text-white bg-blue-600 rounded-lg hover:bg-blue-500 cursor-pointer">
-        <button>Criar</button>
-        <PlusCircle size={18} />
-      </div>
+    <div className='flex justify-center mx-auto gap-2 w-[46rem] border-2'>
+      <input type="radio" name="check" />
+      {/* <CheckCircle size={30} color='white' /> */}
+      <p className='text-gray-200'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat hic similique et iure, dicta nihil sequi, odit ab error commodi porro aliquid. Quis at voluptatum iste vel aperiam voluptatibus officiis.</p>
     </div>
-  );
+  )
 }
