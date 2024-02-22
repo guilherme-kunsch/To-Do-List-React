@@ -10,7 +10,7 @@ export function CreatedTask() {
       </div>
       <div>
         <button>
-          <Trash size={28} color="white" />
+          <Trash size={28} color="#808080" />
         </button>
       </div>
     </div>
