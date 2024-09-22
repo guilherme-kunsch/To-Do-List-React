@@ -1,7 +1,7 @@
 import { PlusCircle, MagnifyingGlass } from "@phosphor-icons/react";
 import React, { useState, useEffect } from "react";
 import { Input } from "./Input/Input";
-import { TaskTable } from "./TaskTable";
+import { TaskList } from "./TaskTable";
 
 export function NewTask() {
   const [tasks, setTasks] = useState([]);
@@ -12,6 +12,7 @@ export function NewTask() {
     data_vencimento: "",
     status: ""
   });
+  const [editingTaskId, setEditingTaskId] = useState(null); 
 
   const fetchData = async () => {
     try {
@@ -20,13 +21,12 @@ export function NewTask() {
       setTasks(data);
       setError(null); 
     } catch (error) {
-      setError(
-        "Ocorreu um erro ao buscar as tarefas. Por favor, tente novamente."
-      );
+      setError("Ocorreu um erro ao buscar as tarefas. Por favor, tente novamente.");
     }
   };
 
   useEffect(() => {
+
   }, []);
 
   const handleChange = (e) => {
@@ -40,9 +40,12 @@ export function NewTask() {
   const submitForm = async (e) => {
     e.preventDefault();
 
+    const method = editingTaskId ? "PUT" : "POST"; 
+    const url = editingTaskId ? `http://localhost:5001/v1/tarefas/${editingTaskId}` : "http://localhost:5001/v1/tarefas";
+
     try {
-      const response = await fetch("http://localhost:5001/v1/tarefas", {
-        method: "POST",
+      const response = await fetch(url, {
+        method: method,
         headers: {
           "Content-Type": "application/json",
         },
@@ -52,6 +55,7 @@ export function NewTask() {
       if (response.ok) {
         console.log("Formulário enviado com sucesso!");
         setFormData({ titulo: "", descricao: "", data_vencimento: "", status: ""}); 
+        setEditingTaskId(null); 
         fetchData(); 
       } else {
         console.error("Erro ao enviar o formulário", error);
@@ -59,6 +63,16 @@ export function NewTask() {
     } catch (error) {
       console.error("Erro:", error);
     }
+  };
+
+  const handleEditClick = (task) => {
+    setEditingTaskId(task.id);
+    setFormData({
+      titulo: task.titulo,
+      descricao: task.descricao,
+      data_vencimento: task.data_vencimento.split('T')[0],
+      status: task.status,
+    });
   };
 
   return (
@@ -91,29 +105,35 @@ export function NewTask() {
             <p className="text-white">Status</p>
             <Input
               text={"Adicione um status"}
-              type="status"
               name="status"
               value={formData.status}
               onChange={handleChange}
             />
           </div>
+          <div className="flex justify-between gap-4 mt-4">
+            <div className="flex w-[7rem] items-center justify-center gap-2 p-2 text-white bg-green-600 rounded-lg hover:bg-green-500 cursor-pointer">
+              <button type="submit">
+                {editingTaskId ? "Atualizar" : "Criar"}
+              </button>
+              <PlusCircle size={18} />
+            </div>
+            <div className="flex items-center gap-2 p-2 text-white bg-blue-600 rounded-lg hover:bg-blue-500 cursor-pointer">
+              <button type="button" onClick={fetchData}>
+                Visualizar
+              </button>
+              <MagnifyingGlass size={18} />
+            </div>
+          </div>
         </form>
-        <div className="flex justify-between gap-4 mt-4">
-          <div className="flex w-[7rem] items-center justify-center gap-2 p-2 text-white bg-green-600 rounded-lg hover:bg-green-500 cursor-pointer">
-            <button type="submit" onClick={submitForm}>
-              Criar
-            </button>
-            <PlusCircle size={18} />
-          </div>
-          <div className="flex items-center gap-2 p-2 text-white bg-blue-600 rounded-lg hover:bg-blue-500 cursor-pointer">
-            <button type="button" onClick={fetchData}>
-              Visualizar
-            </button>
-            <MagnifyingGlass size={18} />
-          </div>
-        </div>
       </div>
-      {tasks.length > 0 && <TaskTable tasks={tasks} error={error} />}
+      {tasks.length > 0 && (
+        <TaskList
+          tasks={tasks}
+          setTasks={setTasks}
+          error={error}
+          handleEditClick={handleEditClick} 
+        />
+      )}
     </div>
   );
 }
